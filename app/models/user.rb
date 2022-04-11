@@ -1,15 +1,13 @@
 class User < ApplicationRecord
     EMAIL_REGEXP = /\A[^@]+@([^@\.]+\.)+[^@\.]+\z/
     
-    validates_presence_of :email, :full_name, :location, :password
-    validates_confirmation_of :password
+    # Lembre-se de tirar as validações de senha!
+    # O has_secure_password já o faz para você.
+    validates_presence_of :email, :full_name, :location
     validates_length_of :bio, minimum: 30, allow_blank: false
+    
+    validates_format_of :email, with: EMAIL_REGEXP
+    has_secure_password
 
-    validate :email_format
-
-    private
-
-    def email_format
-        errors.add(:email, :invalid) unless email.match(EMAIL_REGEXP)
-    end
 end
+
