@@ -21,16 +21,20 @@ class UsersController < ApplicationController
 
     def new
         @user = User.new
-        end
-        def create
+    end
+
+    def create
         # Lembre-se de alterar a linha a seguir!
         # mude de params[:user] para user_params.
         @user = User.new(user_params)
         
         if @user.save
-        redirect_to @user
+            Signup.confirm_email(@user).deliver
+
+            redirect_to @user, notice: 'Cadastro criado com sucesso!'
+
         else
-            render action: :new
+            render :new
         end
     end
 
@@ -42,4 +46,5 @@ class UsersController < ApplicationController
                 permit(:email, :full_name, :location, :password,
                 :password_confirmation, :bio)
     end
+    
 end
